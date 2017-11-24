@@ -1,0 +1,2 @@
+debian/bin/eltokend usr/bin
+src/eltokend usr/lib/eltoken

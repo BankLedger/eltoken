@@ -1,0 +1,5 @@
+eltoken usr/bin
+share/pixmaps/eltoken32.xpm usr/share/pixmaps
+share/pixmaps/eltoken80.xpm usr/share/pixmaps
+debian/eltoken.desktop usr/share/applications
+debian/eltoken.protocol usr/share/kde4/services/
