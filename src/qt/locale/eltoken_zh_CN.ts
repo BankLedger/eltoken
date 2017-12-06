@@ -1861,6 +1861,11 @@ Address: %4
         <translation>错误：交易被拒绝。可能由于钱包中部分金额已被使用，例如您使用了钱包数据的副本，在副本中某些金额已被使用，但在此处尚未被标记为已使用。</translation>
     </message>
     <message>
+        <location line="+5"/>
+        <source>Error: The transaction was rejected, can only send to yourself with locked function.</source>
+        <translation>错误：交易被拒绝, 只能给自己发送带有锁定功能的交易。</translation>
+    </message>
+    <message>
         <location line="+241"/>
         <source>WARNING: Invalid Eltoken address</source>
         <translation>警告：无效的投票链地址</translation>

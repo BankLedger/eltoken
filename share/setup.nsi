@@ -5,7 +5,7 @@ SetCompressor /SOLID lzma
 
 # General Symbol Definitions
 !define REGKEY "SOFTWARE\$(^Name)"
-!define VERSION 1.0.0.0
+!define VERSION 1.0.1.0
 !define COMPANY "Eltoken project"
 !define URL http://www.electionchain.com/
 
@@ -45,13 +45,13 @@ Var StartMenuGroup
 !insertmacro MUI_LANGUAGE English
 
 # Installer attributes
-OutFile eltoken-1.0.0.0-win32-setup.exe
+OutFile eltoken-1.0.1.0-win32-setup.exe
 InstallDir $PROGRAMFILES\eltoken
 CRCCheck on
 XPStyle on
 BrandingText " "
 ShowInstDetails show
-VIProductVersion 1.0.0.0
+VIProductVersion 1.0.1.0
 VIAddVersionKey ProductName eltoken
 VIAddVersionKey ProductVersion "${VERSION}"
 VIAddVersionKey CompanyName "${COMPANY}"

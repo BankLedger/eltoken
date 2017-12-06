@@ -230,16 +230,21 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(const QList<SendCoinsRecipie
         std::vector<std::pair<CScript, CLockData> > vecLockSend;
         foreach(const SendCoinsRecipient &rcp, recipients)
         {
+            string strAddress = rcp.address.toStdString();
+            CTxDestination addr = CBitcoinAddress(strAddress).Get();
+
             CScript scriptPubKey;
-            scriptPubKey.SetDestination(CBitcoinAddress(rcp.address.toStdString()).Get());
+            scriptPubKey.SetDestination(addr);
             if(!rcp.lock)
             {
-                LogPrintf("try to send %s %lld with common transaction\n", rcp.address.toStdString(), rcp.amount);
+                LogPrintf("try to send %s %lld with common transaction\n", strAddress, rcp.amount);
                 vecSend.push_back(make_pair(scriptPubKey, rcp.amount));
             }
             else // send transaction with locked function
             {
-                LogPrintf("try to send %s %lld %d with lock transaction\n", rcp.address.toStdString(), rcp.amount, rcp.month);
+                LogPrintf("try to send %s %lld %d with lock transaction\n", strAddress, rcp.amount, rcp.month);
+                if(!IsMine(*wallet, addr))
+                    return LockTxToOthers;
                 vecLockSend.push_back(make_pair(scriptPubKey, CLockData(rcp.amount, rcp.month)));
             }
         }

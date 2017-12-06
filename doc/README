@@ -1,4 +1,4 @@
-Eltoken 1.0.0.0 BETA
+Eltoken 1.0.1.0 BETA
 
 Copyright (c) 2017 Eltoken Developers
 Copyright (c) 2014-2016 BlackCoin Developers

@@ -346,6 +346,9 @@ Value sendwithlock(const Array& params, bool fHelp)
     if (!address.IsValid())
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Eltoken address");
 
+    if(!IsMine(*pwalletMain, address.Get()))
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Error: can only send to yourself with locked function.");
+
     int64_t nLockAmount = AmountFromValue(params[1]);
     if(!MoneySendRange(nLockAmount))
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid locked amount, minimum: 0.00000001 ELT, maximum: 10000000000 ELT");
@@ -1336,6 +1339,92 @@ Value gettransaction(const Array& params, bool fHelp)
     return entry;
 }
 
+Value gettxlockinfo(const Array & params, bool fHelp)
+{
+    if (fHelp || params.size() != 2)
+        throw runtime_error(
+            "gettxlockinfo <txid> <eltokenaddress>\n"
+            "get lock-information of eltokenaddress from txid.");
+
+    uint256 hash;
+    hash.SetHex(params[0].get_str());
+
+    CBitcoinAddress address(params[1].get_str());
+    if (!address.IsValid())
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Eltoken address");
+    string strAddress = address.ToString();
+
+    bool bExist = false;
+    bool bLocked = false;
+    int index = -1;
+    int64_t nUnlockHeight = 0;
+    int64_t nLockPrincipal = 0;
+    int64_t nLockInterest = 0;
+    if(pwalletMain->mapWallet.count(hash))
+    {
+        const CWalletTx& wtx = pwalletMain->mapWallet[hash];
+        int i = -1;
+        BOOST_FOREACH(const CTxOut& txout, wtx.vout)
+        {
+            i++;
+            CTxDestination addr;
+            if(!ExtractDestination(txout.scriptPubKey, addr))
+                continue;
+            if(strAddress.compare(CBitcoinAddress(addr).ToString()) != 0)
+                continue;
+            bExist = true;
+            index = i;
+            if(IsLockedTxOut(hash, txout))
+            {
+                bLocked = true;
+                nUnlockHeight = txout.nUnlockHeight;
+                nLockPrincipal = GetLockPrincipal(hash, txout);
+                nLockInterest = txout.nValue - nLockPrincipal;
+                break;
+            }
+        }
+    }
+    else
+    {
+        CTransaction tx;
+        uint256 hashBlock = 0;
+        if(GetTransaction(hash, tx, hashBlock))
+        {
+            int i = -1;
+            BOOST_FOREACH(const CTxOut& txout, tx.vout)
+            {
+                i++;
+                CTxDestination addr;
+                if(!ExtractDestination(txout.scriptPubKey, addr))
+                    continue;
+                if(strAddress.compare(CBitcoinAddress(addr).ToString()) != 0)
+                    continue;
+                bExist = true;
+                index = i;
+                if(IsLockedTxOut(hash, txout))
+                {
+                    bLocked = true;
+                    nUnlockHeight = txout.nUnlockHeight;
+                    nLockPrincipal = GetLockPrincipal(hash, txout);
+                    nLockInterest = txout.nValue - nLockPrincipal;
+                    break;
+                }
+            }
+        }
+    }
+
+    Object result;
+    result.push_back(Pair("txid", hash.GetHex()));
+    result.push_back(Pair("address", strAddress));
+    result.push_back(Pair("exist", bExist ? 1 : 0));
+    result.push_back(Pair("n", index));
+    result.push_back(Pair("lock", bLocked ? 1 : 0));
+    result.push_back(Pair("unlock_height", nUnlockHeight));
+    result.push_back(Pair("lock_principal", ValueFromAmount(nLockPrincipal)));
+    result.push_back(Pair("lock_interest", ValueFromAmount(nLockInterest)));
+
+    return result;
+}
 
 Value backupwallet(const Array& params, bool fHelp)
 {

@@ -181,5 +181,6 @@ extern json_spirit::Value getcheckpoint(const json_spirit::Array& params, bool f
 extern json_spirit::Value getblockchaininfo(const json_spirit::Array& params, bool fHelp);
 extern json_spirit::Value getblockhashes(const json_spirit::Array& params, bool fHelp);
 extern json_spirit::Value getallblockhash(const json_spirit::Array& params, bool fHelp);
+extern json_spirit::Value gettxlockinfo(const json_spirit::Array& params, bool fHelp);
 
 #endif

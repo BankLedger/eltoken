@@ -51,6 +51,7 @@ public:
         DuplicateAddress,
         TransactionCreationFailed, // Error returned when wallet is still locked
         TransactionCommitFailed,
+        LockTxToOthers, // Error returned when try to send locked tx to others
         Aborted
     };
 

@@ -1876,6 +1876,11 @@ Address: %4
         <translation>Error: The transaction was rejected. This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here.</translation>
     </message>
     <message>
+        <location line="+5"/>
+        <source>Error: The transaction was rejected, can only send to yourself with locked function.</source>
+        <translation>Error: The transaction was rejected, can only send to yourself with locked function.</translation>
+    </message>
+    <message>
         <location line="+241"/>
         <source>WARNING: Invalid Eltoken address</source>
         <translation></translation>
